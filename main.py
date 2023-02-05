@@ -54,41 +54,41 @@ def requst(task):    # This line of code initializes a list of tasks that the pr
         # If user requests to rename newly created folder, do so
     if "погода" in task:
 
-        config_dict = get_default_config()  # Инициализация get_default_config()
-        config_dict['language'] = 'ru'  # Установка языка
+        config_dict = get_default_config()  # Initialize get_default_config()
+        config_dict['language'] = 'ru'  # Set language
         city_name = "Введите ваш город"
         start.say(city_name)
         start.runAndWait()
-        place = input("Введите ваш город: ")  # Переменная для записи города
+        place = input("Введите ваш город: ")  # Variable to write the city
         code_of_the_country = "Введите код вашей страны"
         start.say(code_of_the_country)
         start.runAndWait()
-        country = input("Введите код вашей страны: ")  # Переменная для записи страны/кода страны
-        country_and_place = place + ", " + country  # Запись города и страны в одну переменную через запятую
+        country = input("Введите код вашей страны: ")  # Variable to record the country/country code
+        country_and_place = place + ", " + country  # Record city and country in one variable separated by commas
 
-        owm = OWM('2baccc8dde391cff0003273e68813ea8')  # Ваш ключ с сайта open weather map
-        mgr = owm.weather_manager()  # Инициализация owm.weather_manager()
-        observation = mgr.weather_at_place(country_and_place)
-        # Инициализация mgr.weather_at_place() И передача в качестве параметра туда страну и город
+        owm = OWM('2baccc8dde391cff0003273e68813ea8')  # Your key from the open weather map site
+        mgr = owm.weather_manager()  # Initialize owm.weather_manager()
+        observation = mgr.weather_at_place(country_and_place)   # Initialize mgr.weather_at_place(). And transfer as a parameter there the country and city
+        
 
         w = observation.weather
 
-        status = w.detailed_status  # Узнаём статус погоды в городе и записываем в переменную status
-        w.wind()  # Узнаем скорость ветра
-        humidity = w.humidity  # Узнаём Влажность и записываем её в переменную humidity
-        temp = w.temperature('celsius')['temp']  # Узнаём температуру в градусах по цельсию и записываем в переменную temp
-        start.say("В городе " + str(place) + " сейчас " + str(status) +  # Выводим город и статус погоды в нём
+        status = w.detailed_status  # Find out the weather status in the city and write it to the status variable
+        w.wind()  # Find out the wind speed
+        humidity = w.humidity  # Find out the Humidity and write it to the humidity variable
+        temp = w.temperature('celsius')['temp']  # Find out the temperature in degrees Celsius and write it to the temp variable
+        start.say("В городе " + str(place) + " сейчас " + str(status) +  # Display the city and the status of the weather in it
                   "Температура " + str(
-                round(temp)) + " градусов по цельсию" +  # Выводим температуру с округлением в ближайшую сторону
-                  "Влажность составляет " + str(humidity) + "%" +  # Выводим влажность в виде строки
-                  "Скорость ветра " + str(w.wind()['speed']) + " метров в секунду")  # Узнаём и выводим скорость ветра
+                round(temp)) + " градусов по цельсию" +  # Display the temperature rounded to the nearest
+                  "Влажность составляет " + str(humidity) + "%" +  # Output humidity as a string
+                  "Скорость ветра " + str(w.wind()['speed']) + " метров в секунду")  # Get and display wind speed
         start.runAndWait()
 
-        print("В городе " + str(place) + " сейчас " + str(status) +  # Выводим город и статус погоды в нём
+        print("В городе " + str(place) + " сейчас " + str(status) +  # Display the city and the status of the weather in it
                   "\nТемпература " + str(
-                round(temp)) + " градусов по цельсию" +  # Выводим температуру с округлением в ближайшую сторону
-                  "\nВлажность составляет " + str(humidity) + "%" +  # Выводим влажность в виде строки
-                  "\nСкорость ветра " + str(w.wind()['speed']) + " метров в секунду")  # Узнаём и выводим скорость ветра
+                round(temp)) + " градусов по цельсию" +  # Display the temperature rounded to the nearest
+                  "\nВлажность составляет " + str(humidity) + "%" + # Output humidity as a string
+                  "\nСкорость ветра " + str(w.wind()['speed']) + " метров в секунду")  # Get and display wind speed
     elif "поиск в интернете" in task:   # search goggle
         tex = 'Введите ваш запрос: '
         start.say(tex)
