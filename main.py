@@ -9,17 +9,41 @@ from pyowm.utils.config import get_default_config
 # Initialize the pyttsx3 module
 start = pyttsx3.init()
 
-hello = 'Здраствуйте, как мне вас называть?'   # Greet the user and ask for their name
-start.say(hello)
-start.runAndWait()
-my_name = input(hello)
-start.say(f'Хорошо, {my_name}')
-start.runAndWait()
+def no_fail():
+    hello = 'Здраствуйте, как мне вас называть?'# Greet the user and ask for their name
+    start.say(hello)
+    start.runAndWait()
+    my_name = input(hello)
+    my_name_safe = my_name
+    os.mkdir(f'C:/Users/Admin/PycharmProjects/Voice_Assictant/Testpdf.txt')
+    file = open('Testpdf.txt', 'w', encoding='utf-8')
+    file.write(my_name_safe)
+    start.say(f'Хорошо, {my_name}')
+    start.runAndWait()
+
+def yes_fail():
+    file_open = open('Testpdf.txt', encoding='utf-8')
+    my_name_safe_document = file_open.read()
+    my_name_safe_document_say = f'Здраствуйте, {my_name_safe_document}'
+    print(f'Здраствуйте, {my_name_safe_document}')
+    start.say(my_name_safe_document_say)
+    start.runAndWait()
+
+try:
+    file = open('Testpdf.txt')
+except IOError as e:
+    no_fail()
+else:
+    with file:
+        yes_fail()
+
 
 def listen():   # Define a function to listen for user input using speech recognition module
     r = sr.Recognizer()     # Initialize the speech recognition module
     with sr.Microphone() as source:     # Start the microphone and adjust for ambient noise
-        print(f'Жду вопроса, {my_name}')
+        file_open = open('Testpdf.txt', encoding='utf-8')
+        my_name_user = file_open.read()
+        print(f'Жду вопроса')
         r.pause_threshold = 1 # stop
         r.adjust_for_ambient_noise(source, duration=1)
         audio = r.listen(source)    # Listen for audio input from the microphone
@@ -54,41 +78,41 @@ def requst(task):    # This line of code initializes a list of tasks that the pr
         # If user requests to rename newly created folder, do so
     if "погода" in task:
 
-        config_dict = get_default_config()  # Initialize get_default_config()
-        config_dict['language'] = 'ru'  # Set language
+        config_dict = get_default_config()  # Инициализация get_default_config()
+        config_dict['language'] = 'ru'  # Установка языка
         city_name = "Введите ваш город"
         start.say(city_name)
         start.runAndWait()
-        place = input("Введите ваш город: ")  # Variable to write the city
+        place = input("Введите ваш город: ")  # Переменная для записи города
         code_of_the_country = "Введите код вашей страны"
         start.say(code_of_the_country)
         start.runAndWait()
-        country = input("Введите код вашей страны: ")  # Variable to record the country/country code
-        country_and_place = place + ", " + country  # Record city and country in one variable separated by commas
+        country = input("Введите код вашей страны: ")  # Переменная для записи страны/кода страны
+        country_and_place = place + ", " + country  # Запись города и страны в одну переменную через запятую
 
-        owm = OWM('2baccc8dde391cff0003273e68813ea8')  # Your key from the open weather map site
-        mgr = owm.weather_manager()  # Initialize owm.weather_manager()
-        observation = mgr.weather_at_place(country_and_place)   # Initialize mgr.weather_at_place(). And transfer as a parameter there the country and city
-        
+        owm = OWM('2baccc8dde391cff0003273e68813ea8')  # Ваш ключ с сайта open weather map
+        mgr = owm.weather_manager()  # Инициализация owm.weather_manager()
+        observation = mgr.weather_at_place(country_and_place)
+        # Инициализация mgr.weather_at_place() И передача в качестве параметра туда страну и город
 
         w = observation.weather
 
-        status = w.detailed_status  # Find out the weather status in the city and write it to the status variable
-        w.wind()  # Find out the wind speed
-        humidity = w.humidity  # Find out the Humidity and write it to the humidity variable
-        temp = w.temperature('celsius')['temp']  # Find out the temperature in degrees Celsius and write it to the temp variable
-        start.say("В городе " + str(place) + " сейчас " + str(status) +  # Display the city and the status of the weather in it
+        status = w.detailed_status  # Узнаём статус погоды в городе и записываем в переменную status
+        w.wind()  # Узнаем скорость ветра
+        humidity = w.humidity  # Узнаём Влажность и записываем её в переменную humidity
+        temp = w.temperature('celsius')['temp']  # Узнаём температуру в градусах по цельсию и записываем в переменную temp
+        start.say("В городе " + str(place) + " сейчас " + str(status) +  # Выводим город и статус погоды в нём
                   "Температура " + str(
-                round(temp)) + " градусов по цельсию" +  # Display the temperature rounded to the nearest
-                  "Влажность составляет " + str(humidity) + "%" +  # Output humidity as a string
-                  "Скорость ветра " + str(w.wind()['speed']) + " метров в секунду")  # Get and display wind speed
+                round(temp)) + " градусов по цельсию" +  # Выводим температуру с округлением в ближайшую сторону
+                  "Влажность составляет " + str(humidity) + "%" +  # Выводим влажность в виде строки
+                  "Скорость ветра " + str(w.wind()['speed']) + " метров в секунду")  # Узнаём и выводим скорость ветра
         start.runAndWait()
 
-        print("В городе " + str(place) + " сейчас " + str(status) +  # Display the city and the status of the weather in it
+        print("В городе " + str(place) + " сейчас " + str(status) +  # Выводим город и статус погоды в нём
                   "\nТемпература " + str(
-                round(temp)) + " градусов по цельсию" +  # Display the temperature rounded to the nearest
-                  "\nВлажность составляет " + str(humidity) + "%" + # Output humidity as a string
-                  "\nСкорость ветра " + str(w.wind()['speed']) + " метров в секунду")  # Get and display wind speed
+                round(temp)) + " градусов по цельсию" +  # Выводим температуру с округлением в ближайшую сторону
+                  "\nВлажность составляет " + str(humidity) + "%" +  # Выводим влажность в виде строки
+                  "\nСкорость ветра " + str(w.wind()['speed']) + " метров в секунду")  # Узнаём и выводим скорость ветра
     elif "поиск в интернете" in task:   # search goggle
         tex = 'Введите ваш запрос: '
         start.say(tex)
